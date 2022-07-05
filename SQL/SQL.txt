@@ -1,0 +1,741 @@
+A database is an organized collection of structured information or data , typically stored electroniclaly in a computer system
+Database is used to preserve the data
+
+Data can be stored in two ways
+1 File handling
+2 Database[well structured and can retrive or access data fastly]
+
+Database is classifed as
+RDBMS-> Relational Database
+NOSQL-> Non-Relational Database
+
+SQL- Structured Query Language is a bridge between data and database which is used to intearct with the database
+
+Sub Languages in SQL
+1 Data Definition Language[creation of DataBase, Creation of tables,drop]
+2 Data Manipulation Language[insert,update,delete]
+3 Data Query Language [select]
+4 Transaction Control Language [Save and COMMIT data (cannot be edited when commited)] 
+
+Creating a DataBase
+To create a DataBase -create database databse-name
+To Activate a Database - use database-name
+TO Remove a DataBase- drop database database-name [removes all the data in the DataBase]
+ 
+Data Types in SQL
+1 int-tinyint,int,bigint
+2 decimal(p,q)--> p-Number of digits before Point, q-Number of digits after Point
+3 Used to store string 
+ char(size)-->  fixed length
+ nchar(size)--> used to store unicode values
+ varchar(size)--> Variable length
+ nvarchar(size)--> used to store unicode values
+4 time(0-7)
+  HR:MIN:SEC:3456789[above number in bracket specifies number of digits to appear in milliseconds]
+5 date
+  YEAR:MONTH:DAY 
+
+[-- symbol used for comments]
+
+DATA DEFINITION LANGUAGE
+
+Creating a table
+create table table-name(
+column_name datatype,
+)
+
+ex:
+create table student(
+student_id int,
+student_name varchar(40),
+student_age int,
+student_avg decimal(10,2)
+)
+
+To view the created table - select * from student
+
+Adding columns in a existing table
+alter keyword in sql
+
+alter table table-name
+add new_column_name datatype
+
+ex:
+alter table student
+add stud_parent varchar(40)
+
+Changing an existing column in a table in database
+alter table table-name
+change column previous_name new_name datatype(size) [previous size can be changed]
+ex:
+alter table student
+change column stud_parent parent_name varchar(60)
+
+Removing a column in a table
+alter table table-name
+drop column column_name
+
+ex:
+alter table student
+drop column parent_name
+
+Delete a complete table
+drop - uses to delete complete rows and columns in a table
+truncate- only drops rows, columns stay the same
+
+drop table table-name
+truncate table table-name
+
+DATA QUERY LANGUAGE
+select column_name,column_name,... 
+from table-name
+ex:
+select student_id,student_name 
+from student;
+
+to print all the columns from the students
+select * from table-name
+
+DATA MANIPULATION LANGUAGE
+
+Inserting a data into a table in a DataBase
+ex: for inserting for specified columns
+
+insert into 
+student(student_id,student_name)
+values (1,'student_1'),(2,'student_2'),
+(3,'student_3')
+
+for inserting into every columns
+insert into
+student values('vlaues') 
+
+ex:
+insert into 
+student values ('student_1',143,20,86.56),('student_2',13,22,78.6)
+
+Update or Edit the data in a table in a Database [set sql_safe_updates = 0 - run this before this query]
+update table-name
+set column_name=value
+where
+column_name is null
+
+if the where condition is not written, full column will be filled by the specified value
+
+ex:
+update student
+set student_age=20
+where
+student_age is null;
+
+To Delete data from a table in a DataBase
+
+Saftey feature in SQL can be disabled by 
+set sql_safe_updates = 0
+
+delete from table-name
+where column_name < or > or == value
+
+ex:
+delete from student
+where student_avg=86.56
+
+Primary key:
+Specified with unique value to draw required data (row)
+We will create over a column
+Primary keys can be created on non-duplicate values(unique values)
+There should be no null values in the column
+
+ex:
+create table student(
+id int, [(id int auto_increment,) used for incrementing the id ]
+name varchar(30),
+gmail varchar(60),
+primary key(id)
+)
+
+create table certificate(
+id int,
+year int,
+sem int,
+primary key(id)
+)
+
+insert into certificate
+values(id,yearr,sem),
+(101,2020,1),
+(102,2020,2),
+(103,2020,3)
+
+
+Foreign Key:[linked with Primary key]
+
+Data in primary keys can be used
+Only primary key values are accepted
+Duplicates and Null values are also accepted
+
+ex:
+create table certificate_log
+(
+student_id int,
+certificate_id int,
+received_date date,
+foreign key(student_id) references student(id),
+foreign key(certificate_id) references certificate(id)
+)
+
+
+
+
+insert into certificate_log
+values
+(1,101,'2020-12-30'),
+(1,102,'2020-12-30'),
+(2,101,'2020-12-30'),
+(3,101,'2020-12-30')
+
+Values in primary key are only used in Foreign key and repetition of keys are allowed
+Both Primary Key and Foriegn key are relational constraints
+
+ 
+Constraints for Data in DataBase 
+not null
+unique
+check
+
+
+create table student_new
+(
+id int auto_increment,
+name varchar(30) not null,
+gmail varchar(40) not null,
+age int,
+primary key(id),
+unique(gmail),
+check(age>12)
+)
+
+
+insert into student_new(name,gmail,age)
+values
+('student_1','mail1@gmail.com',20),
+('student_2','mail2@gmail.com',20),
+('student_3','mail3@gmail.com',19)
+
+Here mail is not duplicated and age is not less than 12
+
+
+Select query and where clause:
+
+select * from table_name [Prints all the columns]
+
+select column1,column2,... from table_name [Prints specified columns only]
+ex-select student_id,student_name from student
+
+delete column column_name
+where condition
+
+combination of select and where
+
+select * from student
+where
+student_id=2
+
+select * from student
+where student_name='student1'
+
+select * from student
+where student_age>10
+
+select * from student
+where student_age>10 and student_age<19
+
+select * from student
+where student_age<>10 [<> is 'not equals to' in SQL,prints whose age is not 10]
+
+select * from student
+where student_age in (11,12,13,14)   [prints the specified value conditions in the array]
+
+select * from student
+where student_name like '%1' [prints names that end with 1]
+
+where student_name like '1%' [prints names that starts with 1]
+
+where student_name like '%1%'[prints names who have 1 in any position between them]
+
+
+Aggregate functions:
+count
+max
+min
+sum
+avg
+distinct
+
+
+conut:
+select count(*)
+from student    [prints number of records in table]
+
+select count(*) as no_of_students
+from student   [prints-no_of_students=number of records]
+
+avg:
+select avg(marks)
+from student
+
+select avg(marks) as average_marks
+from student
+where age=18 [average_marks=average]
+
+sum:
+select sum(marks) as total_marks
+from student
+where age=18
+
+max:
+select max(marks) as maximum_marks
+from student
+where age=18
+
+min:
+select min(marks) as minimum_marks
+from student
+where age=18
+
+distinct:
+select age from student [prints age column]
+
+select distinct age from student [prints age column with unique values(non-duplicate)]
+
+select max(distinct age) from student[prints max value in unique age values]
+
+
+Joins in SQL:
+uses to join multiple tables
+
+Inner join-Joins only common data between two tables
+Left join -Joins common data and displays left table data and common data
+Right join-Joins common data and displays right table data and common data
+Full outer join- Joins all the data between two tables and displays all the data
+Self join
+
+[common valued column between two tables is a primary key]
+
+Inner join:
+select * from
+table_1 as t1
+inner join
+table_2 as t2
+on 
+t1.base_column = t2.base_column
+
+#Here common data is base_column
+
+ex:
+select * from
+student_table as t1
+inner join
+marks_table as t2
+on 
+t1.id=t2.id
+ 
+#Prints combined table
+#id is common data for both the tables['primary key']
+
+select t1.id,t1.name,t2.marks,t2.rank from
+student_table as t1
+inner join
+marks_table as t2
+on 
+t1.id=t2.id
+ 
+#Prints only selected columns from the two tables
+
+
+Left join:
+select * from 
+student_table as t1
+left join
+ncc_nss_table as t2
+on 
+t1.id=t2.id
+
+#Prints all the data from table from left table and common data between left and right table
+
+
+Right join:
+select * from 
+sport_table as t1
+right join
+ncc_nss_table as t2
+on
+t1.id=t2.id
+
+#Prints common data between right and left data and all the data in the right table
+
+
+
+Full outer join:
+select * from
+sports_table as t1
+full outer join
+ncc_nss_table as t2
+on
+t1.id=t2.id
+
+#Combines all the data from two tables , returns null values if no common values are present
+
+
+Self join:
+uses to join same table data by specifying a condition
+
+select * from
+student_table as t1
+inner join (can use any join here)
+student_table as t2
+on
+t1.marks<t2.marks 
+#all the persons from table 1 whose marks are less than greater marked person joins with highest marks scorer from table 2
+#10-90
+20-90
+30-90
+40-90
+50-90
+
+10-50
+20-50
+30-50
+40-50
+
+10-40
+20-40
+30-40
+
+10-30
+20-30
+
+10-20
+
+
+Order by(sorting by using a column):
+select * from student_table
+order by marks (ascending by default,
+                 asc-for acending,desc- for desending)
+
+select * from student_table
+order by marks desc
+
+select * from student_table
+order by marks desc,age desc
+
+select * from student_table
+order by marks desc,age desc,name
+
+Group by(forming related data as groups):
+
+select sports,count(name) no_of_students
+from student_table
+group by 
+sports
+
+select sports,count(name) no_of_students,avg(marks) average_marks
+from student_table
+group by 
+sports
+
+#Only specified columns in select can be used in group by
+ex:
+select sports ,age
+from student_table 
+group by 
+sports ,age
+ 
+Having Clause in SQL:
+applying and filtering data by condition using having in group by
+ex:
+select sports,count(name) no_of_students, avg(marks) avg_marks
+from student_table
+group by
+sports
+having
+no_of_students>=3 and avg_marks >80
+
+Rank Function in SQL:
+rank()-Allows duplicate ranks and allocates based on no of previous ranked people[1,2,2,2,5]
+row_number()-Dont allow duplicate ranks and allocates based on row number[1,2,3,4,5]
+dense_mark()-Allows duplicates and allocates next rank[1,2,2,2,3]
+
+rank():
+select
+name,marks,rank() over(order by marks desc)  as student_rank
+from student_table
+
+row_number():
+select
+name,marks,row_number() over(order by marks desc) as student_rank
+from student_table
+
+dense_rank():
+select
+name,marks,dense_rank() over(order by marks desc) as student_rank
+from student_table
+
+Union and Intersection in SQL:
+->used between two select qureis 
+->two select quries must have same number and type of columns and rows
+
+uninon-Combines total rows in two select quries
+interset-Display common rows between two select quries[mysql doesnot support intersect,can performed in msSQL]
+
+select * from student_table
+where sports='cricket'
+union
+select * from student_table
+where sports='football'
+
+select * from student_table
+union
+select * from student_table  
+where sports='football'
+
+#Prints original table
+
+intersect:
+select * from student_table
+intersect
+select* from student_table
+where sports='cricket'
+
+#Prints people only play cricket
+
+Sybquries in SQL:
+inserting a query in qurey is a subquery
+
+normal subqueries
+co-related subquries
+
+normal subquries:
+Aim-To find the number of male students whose marks is more than of average of all female students
+#1(sub-query)-runs only for a single row at a time in a table
+
+select avg(marks) avg_marks
+from student
+where gender='female'
+
+#2
+select count(*) no_of_male_students 
+from student
+where
+gender='male'
+and
+marks>
+(select avg(marks) avg_marks
+from student
+where gender='female')
+
+Co-related subquery:
+runs for all the rows at a time in the table
+Aim-finding nth highest salary of the employees
+
+select salary as nth_salary
+from
+employee as t1
+where
+1=(
+select count(*) 
+from employee as t2     [1 prints second highest salary]
+where
+t1.salary < t2.salary
+)
+
+select salary as nth_salary
+from 
+employee as t1
+where
+0=(                    [0 prints first highest salary]
+select count(*)
+from employee as t2
+where
+t1.salary < t2.salary
+)
+
+
+
+limit-used at last of the query
+limit 1-prints only 1st row 
+limit 2 -pirnts only two rows
+
+Normalization in SQL:
+Splitting a table into efficient other tables
+
+main noraml forms
+1NF
+2NF
+3NF
+BCNF
+
+1NF(1st normal form):
+Cannot store second value in any cell 
+
+
+2NF(2nd normal form):
+it should follow 1NF
+no partial dependencies
+
+
+[dependencies:
+ a table contains prime attributes(can be multiple) and non prime attributes
+ ex:prime attributes- student id , subject name
+    non-prime attributes-age, name
+function dependencies-non prime attribute depend upon prime attribute]
+partial dependcies: having multiple prime attributes
+in the above example student name is partially dependent on student id and sub-name
+is partially dependent on sub-ID
+Can be resolved by splitting the tables with prime attributes] 
+
+3NF(3rd Normal form):
+table should follow 2NF
+no tansitive dependency
+
+Transitive dependency-
+if in a table a non-prime attribute is dependent on another non-prime attribute
+Can be resolved by splitting into tables 
+
+
+BCNF:
+it should follow 3NF
+prime attributes should not depend on non-prime attributes
+
+
+VIEWS IN SQL:
+->virtual table
+->it is used to make secure access of data
+->simple way of accessing data
+->Used to display non-sensitive data
+->used only on un-confidential data or non-sensitive data 
+ex: salary of employee, credit card details, passwords etc.,
+
+CREATING A VIEW:
+
+create view my_view as 
+select id,name,age from employee
+where gender='male'
+
+VIEWING A TABLE:
+select * from my_view
+
+STORED PROCEDURES:
+->used to store complex qurey and can call the query anytime,can also insert parameters
+
+CREATING PROCEDURE(like defining a function in python):
+
+#Without parametrs
+
+delimiter//                           [delimiter is used to specify start and end of the procedure]
+create procedure employee_procedure() 
+begin
+select id,name,age from employee
+where 
+gender='male' and age< 19 ;      [; is compulsory for procedure]
+end//
+
+
+CALLING PROCEDURE:
+call employee_procedure()
+ 
+delimiter//
+create procedure parameter procedure(
+	p_gender VARCHAR(30),
+	p_age int
+)
+begin
+select id,name,age from employee
+where
+gender=p_gender and age=p_age
+end//
+
+INDEXES in SQL:
+any query occurs row by row
+by indexing(creating a new variable index, which makes the data to be arranged in ascending order),fast processing can be done while running
+
+create index salary_index on
+employee(salary asc)
+
+select * from employee
+where salary>7000
+(run time is very fast by indexing)
+(same query without indexing can take more run time than of indexing)
+
+
+
+
+
+
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
